@@ -14,8 +14,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,6 +72,63 @@ class CodersApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo("Marta")))
                 .andExpect(jsonPath("$.favouriteLanguage", equalTo("Kotlin")));
+    }
+
+    @Test
+    void returnsAnErrorIfTryingToGetACoderThatDoesNotExist() throws Exception {
+        mockMvc.perform(get("/coders/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void allowsToDeleteACoderByIndex() throws Exception {
+        addTestCoders();
+
+        mockMvc.perform(delete("/coders/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo("Marta")))
+                .andExpect(jsonPath("$.favouriteLanguage", equalTo("Kotlin")));
+
+
+        List<Coder> coders = coderRepository.findAll();
+        assertThat(coders, not(contains(allOf(
+                hasProperty("name", is("Marta")),
+                hasProperty("favouriteLanguage", is("Kotlin"))
+        ))));
+
+    }
+
+    @Test
+    void returnsAnErrorIfTryingToDeleteACoderThatDoesNotExist() throws Exception {
+        mockMvc.perform(delete("/coders/1"))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    void allowsToModifyACoderByName() throws Exception {
+        addTestCoders();
+
+        mockMvc.perform(put("/coders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"Yeraldin\", \"favouriteLanguage\": \"Ruby\" }")
+        ).andExpect(status().isOk());
+
+        List<Coder> coders = coderRepository.findAll();
+
+        assertThat(coders, hasSize(3));
+        assertThat(coders.get(0).getName(), equalTo("Yeraldin"));
+        assertThat(coders.get(0).getFavouriteLanguage(), equalTo("Ruby"));
+    }
+
+    @Test
+    void returnsAnErrorWhenTryingToModifyACoderThatDoesNotExist() throws Exception {
+        addTestCoders();
+
+        mockMvc.perform(put("/coders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"Pepita\", \"favouriteLanguage\": \"C++\" }")
+        ).andExpect(status().isNotFound());
     }
 
     private void addTestCoders() {

@@ -34,4 +34,15 @@ public class CoderController {
         coderRepository.save(coder);
         return coder;
     }
+
+    @DeleteMapping("/coders/{index}")
+    public Coder deleteCoderByIndex(@PathVariable int index) {
+        return coderRepository.deleteByIndex(index).orElseThrow(CoderNotFoundException::new);
+    }
+
+    @PutMapping("/coders")
+    public Coder updateCoderByName(@RequestBody Coder coder) {
+        return coderRepository.update(coder);
+    }
+
 }
