@@ -5,7 +5,7 @@ Este repositorio contiene el código de una API REST implementada con SpringBoot
 
 ## Instrucciones
 
-En grupo, intentad hacer las siguientes tareas. Buscad en Google, preguntad a otros grupos y a vuestras profes y, sobretodo, 
+En grupo, intentad hacer las siguientes tareas. Buscad en Google, preguntad a otros grupos y a vuestras profes y, sobre todo, 
 anotad los problemas que os encontráis y sus soluciones. Y recordad: Paciencia! 
 
 1. `bootRun`
