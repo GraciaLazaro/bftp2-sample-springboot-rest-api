@@ -24,25 +24,27 @@ public class CoderController {
         return coderRepository.findAll();
     }
 
-    @GetMapping("/coders/{index}")
-    public Coder findCoder(@PathVariable int index) {
-        return coderRepository.findByIndex(index).orElseThrow(CoderNotFoundException::new);
+    @GetMapping("/coders/{id}")
+    public Coder findCoder(@PathVariable Long id) {
+        return coderRepository.findById(id).orElseThrow(CoderNotFoundException::new);
     }
 
     @PostMapping("/coders")
     public Coder addCoder(@RequestBody Coder coder) {
-        coderRepository.save(coder);
+        return coderRepository.save(coder);
+    }
+
+    @DeleteMapping("/coders/{id}")
+    public Coder deleteCoderById(@PathVariable Long id) {
+        Coder coder = coderRepository.findById(id).orElseThrow(CoderNotFoundException::new);
+        coderRepository.deleteById(id);
         return coder;
     }
 
-    @DeleteMapping("/coders/{index}")
-    public Coder deleteCoderByIndex(@PathVariable int index) {
-        return coderRepository.deleteByIndex(index).orElseThrow(CoderNotFoundException::new);
-    }
-
     @PutMapping("/coders")
-    public Coder updateCoderByName(@RequestBody Coder coder) {
-        return coderRepository.update(coder);
+    public Coder updateCoderById(@RequestBody Coder coder) {
+        coderRepository.findById(coder.getId()).orElseThrow(CoderNotFoundException::new);
+        return coderRepository.save(coder);
     }
 
 }

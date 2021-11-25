@@ -21,9 +21,9 @@ anotad los problemas que os encontráis y sus soluciones. Y recordad: Paciencia!
 4. API REST
    - Investigad los métodos que implementa esta API usando Postman:
      - GET `/coders` devuelve las coders que existen.
-     - GET `/coder/0` devuelve la coder que tiene la posición 0. Prueba a cambiar el "0" por otros índices.
-     - POST `/coders` nos permite crear una nueva coder.
-     - DELETE `/coders/1` borra a la coder de la posición 1 de la lista. Prueba a cambiar el "1" por otros índices.
+     - GET `/coder/0` devuelve la coder que tiene el id (identificador) 0. Prueba a cambiar el "0" por otros índices.
+     - POST `/coders` nos permite crear una nueva coder. Nos devuelve el objeto que se ha creado en el backend incluyendo su identificador (id) autogenerado.
+     - DELETE `/coders/1` borra a la coder con el id 1 del servidor. Prueba a cambiar el "1" por otros Id.
      - PUT `/coders` nos permite modificar una coder.
 5. Código
    - Analizad el código de este backend

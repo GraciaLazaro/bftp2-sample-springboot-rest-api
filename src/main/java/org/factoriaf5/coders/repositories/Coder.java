@@ -1,15 +1,33 @@
 package org.factoriaf5.coders.repositories;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "coders")
 public class Coder {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final String name;
+    private String name;
     private String favouriteLanguage;
+
+    public Coder() {
+
+    }
 
     public Coder(String name, String favouriteLanguage) {
         this.name = name;
         this.favouriteLanguage = favouriteLanguage;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -1,5 +1,6 @@
 package org.factoriaf5.coders;
 
+import org.aspectj.apache.bcel.classfile.Code;
 import org.factoriaf5.coders.repositories.Coder;
 import org.factoriaf5.coders.repositories.CoderRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -65,10 +66,11 @@ class CodersApiIntegrationTest {
     }
 
     @Test
-    void allowsToFindACoderByPosition() throws Exception {
-        addTestCoders();
+    void allowsToFindACoderById() throws Exception {
 
-        mockMvc.perform(get("/coders/1"))
+        Coder coder = coderRepository.save(new Coder("Marta", "Kotlin"));
+
+        mockMvc.perform(get("/coders/" + coder.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo("Marta")))
                 .andExpect(jsonPath("$.favouriteLanguage", equalTo("Kotlin")));
@@ -81,13 +83,11 @@ class CodersApiIntegrationTest {
     }
 
     @Test
-    void allowsToDeleteACoderByIndex() throws Exception {
-        addTestCoders();
+    void allowsToDeleteACoderById() throws Exception {
+        Coder coder = coderRepository.save(new Coder("Marta", "Kotlin"));
 
-        mockMvc.perform(delete("/coders/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo("Marta")))
-                .andExpect(jsonPath("$.favouriteLanguage", equalTo("Kotlin")));
+        mockMvc.perform(delete("/coders/"+ coder.getId()))
+                .andExpect(status().isOk());
 
 
         List<Coder> coders = coderRepository.findAll();
@@ -106,17 +106,17 @@ class CodersApiIntegrationTest {
 
 
     @Test
-    void allowsToModifyACoderByName() throws Exception {
-        addTestCoders();
+    void allowsToModifyACoder() throws Exception {
+        Coder coder = coderRepository.save(new Coder("Yeraldin", "Java"));
 
         mockMvc.perform(put("/coders")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Yeraldin\", \"favouriteLanguage\": \"Ruby\" }")
+                .content("{\"id\": \"" + coder.getId() + "\", \"name\": \"Yeraldin\", \"favouriteLanguage\": \"Ruby\" }")
         ).andExpect(status().isOk());
 
         List<Coder> coders = coderRepository.findAll();
 
-        assertThat(coders, hasSize(3));
+        assertThat(coders, hasSize(1));
         assertThat(coders.get(0).getName(), equalTo("Yeraldin"));
         assertThat(coders.get(0).getFavouriteLanguage(), equalTo("Ruby"));
     }
@@ -127,7 +127,7 @@ class CodersApiIntegrationTest {
 
         mockMvc.perform(put("/coders")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Pepita\", \"favouriteLanguage\": \"C++\" }")
+                .content("{\"id\": \"" + -1 + "\", \"name\": \"Pepita\", \"favouriteLanguage\": \"C++\" }")
         ).andExpect(status().isNotFound());
     }
 
